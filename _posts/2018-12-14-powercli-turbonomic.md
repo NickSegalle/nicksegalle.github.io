@@ -1,3 +1,9 @@
+---
+layout: post
+title:  "Calling PowerCLI from Turbonomic"
+classes: wide
+---
+
 Background
 
 For certain types of actions with Turbonomic, it would be great if we could run PowerCLI scripts directly from Turbonomic as part of the action, either before or after the action is executed by Turbonomic.  In our scenario, we are using Turbonomic to manage our hosts with a host policy that fully automates 'Start' and 'Suspend' of a host.  This works great, except for one problem: suspending a host in our environment triggers a high priority event to our Hyper-Visor team because the host is no longer responding.  What should be an easy problem to resolve with our monitoring team, i.e. creating an action script to notify BMC Patrol that the host being suspended is in fact OK and to not create a P2 ServiceNow incident, turned out to be very difficult because of the fact that their version of BMC Patrol doesn't support API integration.  So, our options were really limited on what we could do to prevent unnecessary high priority incidents.  Initially, I had thought about writing a bash script to just have Turbonomic call API's to the vCenter and put the host in maintenance mode, as opposed to having it suspended.  However, I struck out again - I couldn't find a way to do this with vCenter API directly, but I did find a way to do it with PowerCLI.  Here I will describe how I use Azure Automation with PowerCLI to accomplish this.  This is a really rare use case, but it might be useful for other functions that PowerCLI is capable of.
