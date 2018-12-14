@@ -16,13 +16,13 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Site Title"
+title                    : "Nick Segalle's Blog"
 title_separator          : "-"
-name                     : "Your Name"
+name                     : "Nick Segalle"
 description              : "An amazing website."
-url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : "https://nicksegalle.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
-repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
+repository               : "NickSegalle/nicksegalle.github.io"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
@@ -103,11 +103,11 @@ analytics:
 
 # Site Author
 author:
-  name             : "Your Name"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am an amazing person."
-  location         : "Somewhere"
-  email            :
+  name             : "Nick Segalle"
+  avatar           : "/assets/images/nicksegalle.jpg"
+  bio              : "Automation enthusiast"
+  location         : "Irvine, California"
+  email            : "nick@segalle.com"
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
@@ -133,7 +133,7 @@ footer:
   links:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      # url:
+      # url: 
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
       # url:
@@ -149,6 +149,9 @@ footer:
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
       # url:
+    - label: "LinkedIn"
+      icon: "fab fa-fw fa-linkedin"
+      url: "https://www.linkedin.com/in/nicksegalle/"
 
 
 # Reading Files
