@@ -1,7 +1,7 @@
 ---
-layout: post
+toc: true
+layout: single
 title:  "Calling PowerCLI from Turbonomic"
-classes: wide
 ---
 
 Background
