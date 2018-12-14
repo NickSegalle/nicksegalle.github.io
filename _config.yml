@@ -19,7 +19,7 @@ locale                   : "en-US"
 title                    : "Nick Segalle's Blog"
 title_separator          : "-"
 name                     : "Nick Segalle"
-description              : "An amazing website."
+description              : "A blog for automation scripts and techniques"
 url                      : "https://nicksegalle.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : "NickSegalle/nicksegalle.github.io"
@@ -104,7 +104,7 @@ analytics:
 # Site Author
 author:
   name             : "Nick Segalle"
-  avatar           : "/assets/images/nicksegalle.jpg"
+  avatar           : "/assets/images/300px-nicksegalle.jpg"
   bio              : "Automation enthusiast"
   location         : "Irvine, California"
   email            : "nick@segalle.com"
