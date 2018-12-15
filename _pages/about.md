@@ -1,6 +1,5 @@
 ---
 layout: single
-title: "About"
 permalink: /About/
 comments: true
 author_profile: true
@@ -22,7 +21,7 @@ author_profile: true
 - Windows Server – 18 years	- SQL & Reporting Administration – 10 years
 - Project Management – 3 years
 - Security / Vulnerability Remediation – 5 years
-- Cloud Services –Azure – 3 years | AWS – 1 year
+- Cloud Services –Azure – 3 years \| AWS – 1 year
 - Virtualization – 10 years
 - Microsoft Exchange – 10 years 
 - PowerCLI – 6 years
