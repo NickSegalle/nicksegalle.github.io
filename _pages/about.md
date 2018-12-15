@@ -5,8 +5,6 @@ comments: true
 author_profile: true
 ---
 
-# Nicholas Segalle
-
 **Senior Systems Engineer** with over 15 years’ experience delivering exceptional customer satisfaction and improving operational standards.  Staying relevant in the ever-changing technology environment is critical.  It requires expertise in understanding all aspects of systems: hardware, software, workflow and automation.  It requires the ability to communicate effectively, adapt quickly to change, and the ability to learn new technologies.  My career experience has allowed me to acquire this experience with a unique combination of technical proficiency and hands-on problem solving through a multitude of technologies and automation techniques.
 
 ## Technical Highlights
