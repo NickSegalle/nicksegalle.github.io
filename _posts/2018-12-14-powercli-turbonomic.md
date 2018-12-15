@@ -41,13 +41,84 @@ For certain types of actions with Turbonomic, it would be great if we could run 
 * Configure Turbonomic to run Action Script
 
 # Procedure
-Setup Azure Hybrid Worker
+## Setup Azure Hybrid Worker
 
-Follow this Microsoft guide on deploying a Azure Hybrid Worker
-Create the PowerShell Script
+Follow this Microsoft guide on deploying a Azure Hybrid Worker 
+
+## Create the PowerShell Script
 
 This script can also be used for other executions of PowerCLI, and incorporates a switch statement that checks the script name which was passed from Turbonomic.  Example - REPLACE_SUSPEND_PhysicalMachine.sh is passed from Turbonomic as part of the data from the webhookdata.  This variable is then read so that we can execute specific actions for each script that calls it.  The alternative would be to create separate runbooks + webhooks for each action.  I felt this was easier to manage.
 
+```PowerShell
+param
+(
+    [Parameter (Mandatory = $False)]
+    [Object] $WebhookData
+)
+ 
+Function Set-VMHost-MaintenanceMode
+{
+    [CmdletBinding()]Param
+        (
+            [Parameter(Mandatory=$False)]
+            [string] $VCServerName,
+            [Parameter(Mandatory=$True)]
+            [string] $VMHostName,
+            [Parameter(Mandatory=$True)]
+            [ValidateNotNullOrEmpty()]
+            [ValidateSet($False,$True)]
+            [string] $MaintenanceMode
+        )
+ 
+    Connect-VIServer -Server $VCServerName
+ 
+    If ($MaintenanceMode -eq $True){
+        $HostName = Get-VMHost -Name $VMHostName
+        $HostCluster = Get-Cluster -VMHost $VMHostName
+        $UpdateHostTask = Set-VMHost -VMHost $HostName -State "Maintenance" -RunAsync
+    }
+    ElseIf ($MaintenanceMode -eq $False){
+        $HostName = Get-VMHost -Name $VMHostName
+        $HostCluster = Get-Cluster -VMHost $VMHostName
+        $UpdateHostTask = Set-VMHost -VMHost $HostName -State "Connected" -RunAsync
+    }
+}
+ 
+$TurboOutput = (ConvertFrom-JSON -InputObject $WebhookData.RequestBody)
+ 
+If ($TurboOutput.ClientSecret -eq '****************************************************')
+{
+    Switch ( $TurboOutput.TurboAction )
+    {
+        PRE_START_PhysicalMachine.sh
+        {
+            ### Future PowerCLI Action
+        }
+        POST_START_PhysicalMachine.sh
+        {
+            ### Future PowerCLI Action
+        }
+        REPLACE_START_PhysicalMachine.sh
+        {
+            Set-VMHost-MaintenanceMode -VCServerName "<vCenterServerName>" -VMHostName $TurboOutput.TargetName -MaintenanceMode $False
+            Write-Output "Took $TurboOutput.TargetName out of maintenance mode."
+        }
+        PRE_SUSPEND_PhysicalMachine.sh
+        {
+            ### Future PowerCLI Action  
+        }
+        POST_SUSPEND_PhysicalMachine.sh
+        {
+            ### Future PowerCLI Action  
+        }
+        REPLACE_SUSPEND_PhysicalMachine.sh
+        {
+            Set-VMHost-MaintenanceMode -VCServerName "<vCenterServerName>" -VMHostName $TurboOutput.TargetName -MaintenanceMode $True
+            Write-Output "Placed $TurboOutput.TargetName in maintenance mode."
+        }
+    }
+}
+```
 
 Execute-Turbonomic-ActionScript  Expand source
 Create the Webhook in Azure Automation
@@ -84,7 +155,9 @@ Create Turbonomic Action Script
 
 Once you've got the runbook and webhook all setup, you'll need to create a request to invoke it from Turbonomic.  I've built the script so that it sends the necessary data from Turbonomic to our PowerShell webhook.  Because an Azure webhook is opened to anyone who has the URL, I felt it necessary to add another layer of security, and that is to place a field 'ClientSecret' in both my PowerShell script, and my Action Script.  That way, if someone does discover the URL, and they knew the name of a physical host, they couldn't do anything malicious, unless of course they discover our client secret.  There might be a better way to secure this, but for now it's how I'll be doing it.
 	
-REPLACE_SUSPEND_PhysicalMachine.sh:
+*REPLACE_SUSPEND_PhysicalMachine.sh:*
+
+```bash
 #!/bin/bash
 curl "https://s15events.azure-automation.net/webhooks?token=**********************************" \
 -X POST
@@ -106,24 +179,27 @@ curl "https://s15events.azure-automation.net/webhooks?token=********************
     }
 EOF
 )
+```
 
 This script is the placed on the Turbonomic appliance in the following location: /srv/tomcat/script/control and must be named using the following syntax:
-References:
 
-    SE: Applications, VM, VDC, Host Storage, DIsk Array, PhysicalMachine
-    Actions: depends on SE (for VMs: Move, Change, Reconfigure, Resize, Provision, Suspend, Start, Terminate)
-    Timing: PRE, POST, REPLACE, CLEAR
+### References:
 
-How to Implement:
+* SE: Applications, VM, VDC, Host Storage, DIsk Array, PhysicalMachine
+* Actions: depends on SE (for VMs: Move, Change, Reconfigure, Resize, Provision, Suspend, Start, Terminate)
+* Timing: PRE, POST, REPLACE, CLEAR
 
-    Create an Automation Policy add Action Orchestration, specify an action type to which you can attach an Action Script for the desired scope
-    Create a properly named action script file in the correct location on your Turbonomic instance
-        /srv/tomcat/script/control
-        Action script file naming convention
-        ((PRE|POST|REPLACE)_)<action>_<ServiceEntityType>.sh
+### How to Implement:
 
-So in this case we created a script named 'REPLACE_SUSPEND_PhysicalMachine.sh' and placed it in this location: /srv/tomcat/script/control/REPLACE_SUSPEND_PhysicalMachine.sh
-Configure Turbonomic to run Action Script
+* Create an Automation Policy add Action Orchestration, specify an action type to which you can attach an Action Script for the desired scope
+* Create a properly named action script file in the correct location on your Turbonomic instance
+  - /srv/tomcat/script/control
+  - Action script file naming convention
+  - ((PRE|POST|REPLACE)_)<action>_<ServiceEntityType>.sh
+
+So in this case we created a script named '**REPLACE_SUSPEND_PhysicalMachine.sh**' and placed it in this location: **/srv/tomcat/script/control/REPLACE_SUSPEND_PhysicalMachine.sh**
+
+## Configure Turbonomic to run Action Script
 
 The last step is to configure Turbonomic to run our Action Script in place of the action orchestration:
 
