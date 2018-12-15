@@ -5,40 +5,42 @@ title:  "Calling PowerCLI from Turbonomic"
 classes: wide
 ---
 
-Background
+
+
+# Background
 
 For certain types of actions with Turbonomic, it would be great if we could run PowerCLI scripts directly from Turbonomic as part of the action, either before or after the action is executed by Turbonomic.  In our scenario, we are using Turbonomic to manage our hosts with a host policy that fully automates 'Start' and 'Suspend' of a host.  This works great, except for one problem: suspending a host in our environment triggers a high priority event to our Hyper-Visor team because the host is no longer responding.  What should be an easy problem to resolve with our monitoring team, i.e. creating an action script to notify BMC Patrol that the host being suspended is in fact OK and to not create a P2 ServiceNow incident, turned out to be very difficult because of the fact that their version of BMC Patrol doesn't support API integration.  So, our options were really limited on what we could do to prevent unnecessary high priority incidents.  Initially, I had thought about writing a bash script to just have Turbonomic call API's to the vCenter and put the host in maintenance mode, as opposed to having it suspended.  However, I struck out again - I couldn't find a way to do this with vCenter API directly, but I did find a way to do it with PowerCLI.  Here I will describe how I use Azure Automation with PowerCLI to accomplish this.  This is a really rare use case, but it might be useful for other functions that PowerCLI is capable of.
 
 
-Requirements & Scope
+# Requirements & Scope
 
-    SSH access to the Turbonomic appliance
-    Azure Automation Account
-        You should have an understanding of how Azure Runbooks work
-    Windows Server 2012R2 running as a Hybrid Runbook Worker with the following requirements:
-        Windows PowerShell 5.1 or later (download WMF 5.1)
-        .NET Framework 4.6.2 or later
-        Two cores
-        4 GB of RAM
-        Port 443 (outbound)
-        Azure Hybrid Worker Setup (More information: Setting up Hybrid Runbook Worker)
-        PowerCLI 6.0 or later
-    An AD Account that is used by Turbonomic and has access to your vCenter.
-    Text editor (VSCode, Notepad++, etc).
+* SSH access to the Turbonomic appliance
+* Azure Automation Account
+  - You should have an understanding of how Azure Runbooks work
+* Windows Server 2012R2 running as a Hybrid Runbook Worker with the following requirements:
+  - Windows PowerShell 5.1 or later (download WMF 5.1)
+  - .NET Framework 4.6.2 or later
+  - Two cores
+  - 4 GB of RAM
+  - Port 443 (outbound)
+  - Azure Hybrid Worker Setup (More information: Setting up Hybrid Runbook Worker)
+  - PowerCLI 6.0 or later
+* An AD Account that is used by Turbonomic and has access to your vCenter.
+* Text editor (VSCode, Notepad++, etc).
 
-Checklist
+# Checklist
 
-    Setup Azure Hybrid Worker
-    Create the PowerShell script
-    Deploy Azure Hybrid Worker
-    Add Azure Runbook which will run PowerCLI
-    Create a webhook for the Azure Runbook
-    Create a bash script which Turbonomic will execute a CURL command to invoke our Azure webhook.
-    SSH to the Turbonomic appliance.
-    Copy bash script to the location where it can be ran by Turbonomic
-    Configure Turbonomic to run Action Script
+* Setup Azure Hybrid Worker
+* Create the PowerShell script
+* Deploy Azure Hybrid Worker
+* Add Azure Runbook which will run PowerCLI
+* Create a webhook for the Azure Runbook
+* Create a bash script which Turbonomic will execute a CURL command to invoke our Azure webhook.
+* SSH to the Turbonomic appliance.
+* Copy bash script to the location where it can be ran by Turbonomic
+* Configure Turbonomic to run Action Script
 
-Procedure
+# Procedure
 Setup Azure Hybrid Worker
 
 Follow this Microsoft guide on deploying a Azure Hybrid Worker
@@ -52,25 +54,31 @@ Create the Webhook in Azure Automation
 
 Once you've written the script, you'll need to create a runbook.  I've named my runbook 'Execute-Turbonomic-ActionScript' and ensured the type of script is PowerShell.
 
-
+![](../assets/images/2018-12-14-21-11-40.png)
 
 Once the runbook is created, the next step will be to edit and paste the PowerShell script from above:
 
+![](../assets/images/2018-12-14-21-12-02.png)
 
 Once you've saved the runbook, it's time to create a webhook.  To do that, you need to click Webhooks → Add Webhook:
 
+![](../assets/images/2018-12-14-21-07-59.png)
 
 Make sure you copy the webhook URI and store it in a safe and secure place.  If you lose the URL, you'll need to create a new webhook!
 
+![](../assets/images/2018-12-14-21-12-19.png)
 
 Next, we're going to configure the Webhook run settings to run on 'Hybrid Worker', and we'll select the Hybrid Worker Group.
 
+![](../assets/images/2018-12-14-21-12-33.png)
 
 Next we need to add an Active Directory user that has the rights to connect to vCenter with PowerCLI:
 
+![](../assets/images/2018-12-14-21-12-43.png)
 
 We'll then set the Hybrid worker group to use this credential:
 
+![](../assets/images/2018-12-14-21-12-51.png)
 
 Create Turbonomic Action Script
 
@@ -119,3 +127,4 @@ Configure Turbonomic to run Action Script
 
 The last step is to configure Turbonomic to run our Action Script in place of the action orchestration:
 
+![](../assets/images/2018-12-14-21-13-13.png)
