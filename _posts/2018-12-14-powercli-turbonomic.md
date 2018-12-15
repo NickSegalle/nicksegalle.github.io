@@ -195,7 +195,7 @@ This script is the placed on the Turbonomic appliance in the following location:
 * Create a properly named action script file in the correct location on your Turbonomic instance
   - /srv/tomcat/script/control
   - Action script file naming convention
-  - ((PRE|POST|REPLACE)_)<action>_<ServiceEntityType>.sh
+  - \(\(PRE\|POST\|REPLACE)\_\)\<action\>\_\<ServiceEntityType\>.sh
 
 So in this case we created a script named '**REPLACE_SUSPEND_PhysicalMachine.sh**' and placed it in this location: **/srv/tomcat/script/control/REPLACE_SUSPEND_PhysicalMachine.sh**
 
