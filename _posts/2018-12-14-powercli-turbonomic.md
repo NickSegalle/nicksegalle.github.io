@@ -183,13 +183,13 @@ EOF
 
 This script is the placed on the Turbonomic appliance in the following location: /srv/tomcat/script/control and must be named using the following syntax:
 
-### References:
+### References
 
 * SE: Applications, VM, VDC, Host Storage, DIsk Array, PhysicalMachine
 * Actions: depends on SE (for VMs: Move, Change, Reconfigure, Resize, Provision, Suspend, Start, Terminate)
 * Timing: PRE, POST, REPLACE, CLEAR
 
-### How to Implement:
+### How to Implement
 
 * Create an Automation Policy add Action Orchestration, specify an action type to which you can attach an Action Script for the desired scope
 * Create a properly named action script file in the correct location on your Turbonomic instance
