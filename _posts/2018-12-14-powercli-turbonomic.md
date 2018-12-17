@@ -120,8 +120,8 @@ If ($TurboOutput.ClientSecret -eq '*********************************************
 }
 ```
 
-Execute-Turbonomic-ActionScript  Expand source
-Create the Webhook in Azure Automation
+
+## Create the Webhook in Azure Automation
 
 Once you've written the script, you'll need to create a runbook.  I've named my runbook 'Execute-Turbonomic-ActionScript' and ensured the type of script is PowerShell.
 
