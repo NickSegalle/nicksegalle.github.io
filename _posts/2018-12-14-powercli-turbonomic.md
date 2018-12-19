@@ -1,7 +1,7 @@
 ---
 toc: true
 layout: single
-title:  "Calling PowerCLI from Turbonomic"
+title:  "Calling PowerCLI from Turbonomic using Azure Automation Hybrid Worker"
 classes: wide
 ---
 
