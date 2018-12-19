@@ -2,6 +2,7 @@
 toc: true
 layout: single
 title:  "Calling PowerCLI from Turbonomic using Azure Automation Hybrid Worker"
+excerpt: "Placing a host in maintenance mode using Turbonomic"
 classes: wide
 ---
 
